@@ -3,6 +3,101 @@
 - 테이블 구조
 ![img_1.png](ERD.png)
 
+## API 명세서
+### 1. 사용자 회원가입
+- ### Request
+  - POST /members
+```json
+{
+    "email":"dnwo0719@naver.com", // @가 포함되어야 함
+    "password":"12345678"  // 8자 이상
+}
+```
+- ### Response
+  - 201 CREATED
+
+### 2. 사용자 로그인
+- ### Request
+  - POST /login
+```json
+{
+    "email":"dnwo0719@naver.com", // @가 포함되어야 함
+    "password":"12345678"  // 8자 이상
+}
+```
+- ### Response
+  - 200 OK
+  - header "Authorization" : "{AccessToken}"
+
+### 3. 게시글 생성
+- ### Request
+  - POST /posts
+  - header "Authorization" : "Bearer {AccessToken}"
+```json
+{
+    "title":"취업하는 방법"
+}
+```
+- ### Response
+  - 200 OK
+
+### 4. 게시글 목록 조회
+- ### Request
+  - GET /posts?page=0&size=3&sort=id,desc
+  - header "Authorization" : "Bearer {AccessToken}"
+
+- ### Response
+  - 200 OK
+```json
+[
+  {
+    "post_id": 3,
+    "title": "취업하는 방법"
+  },
+  {
+    "post_id": 2,
+    "title": "오늘의 운동"
+  },
+  {
+    "post_id": 1,
+    "title": "개발 방법론"
+  }
+]
+```
+
+### 5. 특정 게시글 조회
+- ### Request
+  - GET /posts/{게시글_ID}
+  - header "Authorization" : "Bearer {AccessToken}"
+- ### Response
+  - 200 OK
+```json
+{
+  "post_id": 3,
+  "title": "취업하는 방법"
+}
+```
+
+### 6. 특정 게시글 수정
+- ### Request
+  - PUT /posts/{게시글_ID}
+  - header "Authorization" : "Bearer {AccessToken}" (소유자 확인)
+```json
+{
+    "title":"취업하는 방법"
+}
+```
+- ### Response
+  - 200 OK
+
+### 7. 특정 게시글 삭제
+- ### Request
+  - DELETE /posts/{게시글_ID}
+  - header "Authorization" : "Bearer {AccessToken}" (소유자 확인)
+
+- ### Response
+  - 200 OK
+
 ## 가산점 요소
 - 통합 테스트 또는 단위 테스트 코드를 추가한 경우
 - docker compose를 이용하여 애플리케이션 환경을 구성한 경우 (README.md 파일에 docker-compose 실행 방법 반드시 기입)
