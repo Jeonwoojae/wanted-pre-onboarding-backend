@@ -1,3 +1,8 @@
+
+## DB 구성
+- 테이블 구조
+![img_1.png](ERD.png)
+
 ## 가산점 요소
 - 통합 테스트 또는 단위 테스트 코드를 추가한 경우
 - docker compose를 이용하여 애플리케이션 환경을 구성한 경우 (README.md 파일에 docker-compose 실행 방법 반드시 기입)
