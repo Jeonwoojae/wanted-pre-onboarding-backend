@@ -5,16 +5,17 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Email;
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class RequestJoinMemberDto {
     @Email(message = "check your email")
-    @NotBlank
+    @NotBlank(message = "password must not be blank")
     private String email;
 
-    @Min(message = "password must be longer than 8",value = 8)
+    @Size(message = "password must be longer than 8",min = 8)
+    @NotBlank(message = "password must not be blank")
     private String password;
 }
