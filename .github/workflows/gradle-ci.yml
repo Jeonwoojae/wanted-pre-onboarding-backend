@@ -18,6 +18,17 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    
+    services:
+      mysql:
+        image: mysql:8.0.22
+        env:
+          # application.yml에서 DB를 test로 지정했었다.
+          MYSQL_DB: blog
+          MYSQL_PASSWORD: dnwo0719
+          MYSQL_USER: admin
+        ports:
+          - 3306:3306
 
     steps:
     - uses: actions/checkout@v3
