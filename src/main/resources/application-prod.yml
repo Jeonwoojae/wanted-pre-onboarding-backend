@@ -1,0 +1,12 @@
+
+spring:
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://{MYSQL_URL}/blog?characterEncoding=UTF-8&serverTimezone=UTC
+    username: {MYSQLDB_USERNAME}
+    password: {MYSQLDB_PASSWORD}
