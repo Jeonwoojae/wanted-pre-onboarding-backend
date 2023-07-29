@@ -56,7 +56,7 @@ jobs:
       uses: appleboy/ssh-action@v0.1.6 
       with:
         host: ${{ secrets.REMOTE_IP }} # 인스턴스 IP
-        username: ubnutu
+        username: ubuntu
         key: ${{ secrets.REMOTE_PRIVATE_KEY }} # ec2 instance pem key
         port: ${{ secrets.REMOTE_SSH_PORT }} # 접속포트
         script: | # 실행할 스크립트
