@@ -1,6 +1,5 @@
 package com.example.wantedpreonboardingbackend.domain.memebr.entity;
 
-import com.example.wantedpreonboardingbackend.domain.memebr.dto.RequestJoinMemberDto;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,17 +17,17 @@ public class Member {
     @Column(name = "member_id", updatable = false)
     Long id;
 
-    @Column(name = "email", nullable = false)
+    @Column(name = "email", nullable = false, unique = true)
     @Email
     String email;
 
     @Column(name = "password",nullable = false)
-    String encrypted_password;
+    String encryptedPassword;
 
     @Builder
-    private Member(String email, String encrypted_password){
+    private Member(String email, String encryptedPassword){
         this.email = email;
-        this.encrypted_password = encrypted_password;
+        this.encryptedPassword = encryptedPassword;
     }
 
 }

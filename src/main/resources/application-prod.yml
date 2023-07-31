@@ -10,3 +10,7 @@ spring:
     url: jdbc:mysql://{MYSQL_URL}/blog?characterEncoding=UTF-8&serverTimezone=UTC
     username: {MYSQLDB_USERNAME}
     password: {MYSQLDB_PASSWORD}
+
+token:
+  access_expiration_time: {EXPIRED_TIME}
+  secret: {SECRET_KEY}
