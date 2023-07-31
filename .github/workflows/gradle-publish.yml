@@ -35,7 +35,7 @@ jobs:
         spring.datasource.username: ${{ secrets.MYSQLDB_USERNAME }} 
         spring.datasource.password: ${{ secrets.MYSQLDB_PASSWORD }}
         token.access_expiration_time: ${{ secrets.TOKEN_EXPIRED }}
-        token.secret: ${{ secret.TOKEN_KEY }}
+        token.secret: ${{ secrets.TOKEN_KEY }}
       
     - name: Grant execute permission for gradlew
       run: chmod +x ./gradlew
