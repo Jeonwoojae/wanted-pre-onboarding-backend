@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.validation.Validator;
 
 @Configuration
 @EnableWebSecurity
@@ -21,6 +22,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final MemberService memberService;
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
     private final Environment env;
+    private final Validator validator;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception{
@@ -34,7 +36,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     private AuthenticationFilter getAuthenticationFilter() throws Exception{
         AuthenticationFilter authenticationFilter =
-                new AuthenticationFilter(authenticationManager(), memberService, env, new TokenProvider(env));
+                new AuthenticationFilter(authenticationManager(), memberService, new TokenProvider(env), validator);
     // 로그인에서 사용할 비교하는 쿼리를 구현하지 않고 시큐리티에서 제공하는 로그인을 사용하기 위해 매니저 등록
         return authenticationFilter;
     }
