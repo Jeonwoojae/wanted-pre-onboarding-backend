@@ -103,7 +103,7 @@ class MemberApiTest {
         public void testLoginFailure() throws Exception {
             mockMvc.perform(post("/login")
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content("{\"email\": \"wronguser\", \"password\": \"wrongpassword\"}"))
+                            .content("{\"email\": \"dnwo0719@daum.net\", \"password\": \"wrongpassword\"}"))
                     .andExpect(status().isUnauthorized());
         }
 
@@ -114,6 +114,26 @@ class MemberApiTest {
                 mockMvc.perform(post("/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"email\": \"wronguser\", \"encryptedPassword\": \"wrongpassword\"}"));
+            });
+        }
+
+        @Test
+        @Name("Too short password")
+        public void testLoginTooShortPassword() throws Exception{
+            Assertions.assertThrows(InvalidParameterException.class, ()->{
+                mockMvc.perform(post("/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"email\": \"" + TEST_USERNAME + "\", \"password\": \"" + "123\"}"));
+            });
+        }
+
+        @Test
+        @Name("Is Not Email")
+        public void testLoginNotEmailInput() throws Exception{
+            Assertions.assertThrows(InvalidParameterException.class, ()->{
+                mockMvc.perform(post("/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"email\": \"" + "dnwo\", \"password\": \"" + TEST_PASSWORD + "\"}"));
             });
         }
     }

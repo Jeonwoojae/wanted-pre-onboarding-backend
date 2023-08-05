@@ -5,7 +5,6 @@ import com.example.wantedpreonboardingbackend.domain.memebr.dto.RequestLogin;
 import com.example.wantedpreonboardingbackend.domain.memebr.service.MemberService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.core.env.Environment;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -13,6 +12,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.Validator;
 
 import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
@@ -20,24 +22,23 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.InvalidParameterException;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 @Slf4j
 public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final MemberService memberService;
-    private final Environment env;
     private final TokenProvider tokenProvider;
+
+    private final Validator validator;
 
     public AuthenticationFilter(AuthenticationManager authenticationManager,
                                 MemberService memberService,
-                                Environment env,
-                                TokenProvider tokenProvider) {
+                                TokenProvider tokenProvider,
+                                Validator validator) {
         super.setAuthenticationManager(authenticationManager);
         this.memberService = memberService;
-        this.env = env;
         this.tokenProvider = tokenProvider;
+        this.validator = validator;
     }
     /**
      * 로그인하면 제일 먼저 실행
@@ -47,6 +48,13 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                                                 HttpServletResponse response) throws AuthenticationException {
         try {
             RequestLogin creds = new ObjectMapper().readValue(request.getInputStream(), RequestLogin.class);
+
+            BindingResult bindingResult = new BeanPropertyBindingResult(creds, "requestLogin");
+            validator.validate(creds, bindingResult);
+
+            if (bindingResult.hasErrors()) {
+                throw new InvalidParameterException("로그인 양식에 맞지 않습니다.");
+            }
 
             return getAuthenticationManager().authenticate(
                     new UsernamePasswordAuthenticationToken(
@@ -67,7 +75,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     protected void successfulAuthentication(HttpServletRequest request,
                                             HttpServletResponse response,
                                             FilterChain chain,
-                                            Authentication authResult) throws IOException {
+                                            Authentication authResult) {
         String userEmail = (((User)authResult.getPrincipal()).getUsername());
         MemberDto userDetails = memberService.getUserByEmail(userEmail);
         log.debug(userDetails.toString());
