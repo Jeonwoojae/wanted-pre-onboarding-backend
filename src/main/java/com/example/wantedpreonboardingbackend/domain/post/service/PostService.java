@@ -1,19 +1,22 @@
 package com.example.wantedpreonboardingbackend.domain.post.service;
 
 import com.example.wantedpreonboardingbackend.domain.memebr.entity.Member;
+import com.example.wantedpreonboardingbackend.domain.memebr.exception.AccessDeniedException;
 import com.example.wantedpreonboardingbackend.domain.memebr.repository.MemberRepository;
 import com.example.wantedpreonboardingbackend.domain.post.dto.PostDto;
 import com.example.wantedpreonboardingbackend.domain.post.dto.PostRequestDto;
 import com.example.wantedpreonboardingbackend.domain.post.entity.Post;
 import com.example.wantedpreonboardingbackend.domain.post.repository.PostRepository;
+import com.example.wantedpreonboardingbackend.global.error.exception.ConversionFailedException;
+import com.example.wantedpreonboardingbackend.global.error.exception.EntityNotFoundException;
 import com.example.wantedpreonboardingbackend.global.security.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityNotFoundException;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -25,6 +28,7 @@ public class PostService {
     private final TokenProvider tokenProvider;
     private final MemberRepository memberRepository;
 
+    @Transactional
     public Post writeNewPost(PostRequestDto dto, String token){
         String currentUserEmail = tokenProvider.getEmailFromToken(token);
         Member currentMember = memberRepository.findByEmail(currentUserEmail)
@@ -37,6 +41,7 @@ public class PostService {
         return postRepository.save(newPost);
     }
 
+    @Transactional(readOnly = true)
     public List<PostDto> getPostsListPage(String accessToken, Pageable pageable) {
         String email = tokenProvider.getEmailFromToken(accessToken);
         Member member = memberRepository.findByEmail(email)
@@ -48,6 +53,7 @@ public class PostService {
         return postDtoList;
     }
 
+    @Transactional(readOnly = true)
     public PostDto findPostOne(Long postId, String token){
         String currentUserEmail = tokenProvider.getEmailFromToken(token);
         Member currentMember = memberRepository.findByEmail(currentUserEmail)
@@ -55,11 +61,12 @@ public class PostService {
         Post currentPost = postRepository.findById(postId)
                 .orElseThrow(()->new EntityNotFoundException("해당하는 게시글을 찾을 수 없습니다."));
         PostDto response = Optional.ofNullable(currentPost).map(PostDto::new)
-                .orElseThrow(()->new RuntimeException("Post dto 변환 실패"));
+                .orElseThrow(()->new ConversionFailedException("Post dto 변환 실패"));
 
         return response;
     }
 
+    @Transactional
     public PostDto editPost(Long postId, String token, PostRequestDto requestPostRequestDto) {
         String currentUserEmail = tokenProvider.getEmailFromToken(token);
         Member currentMember = memberRepository.findByEmail(currentUserEmail)
@@ -82,6 +89,7 @@ public class PostService {
         return response;
     }
 
+    @Transactional
     public void deletePost(Long postId, String token) {
         String currentUserEmail = tokenProvider.getEmailFromToken(token);
         Member currentMember = memberRepository.findByEmail(currentUserEmail)

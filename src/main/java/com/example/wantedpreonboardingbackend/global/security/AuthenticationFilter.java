@@ -3,6 +3,7 @@ package com.example.wantedpreonboardingbackend.global.security;
 import com.example.wantedpreonboardingbackend.domain.memebr.dto.MemberDto;
 import com.example.wantedpreonboardingbackend.domain.memebr.dto.RequestLoginDto;
 import com.example.wantedpreonboardingbackend.domain.memebr.service.MemberService;
+import com.example.wantedpreonboardingbackend.global.error.exception.MethodArgumentNotValidException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -20,7 +21,6 @@ import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.security.InvalidParameterException;
 import java.util.ArrayList;
 
 @Slf4j
@@ -53,7 +53,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
             validator.validate(creds, bindingResult);
 
             if (bindingResult.hasErrors()) {
-                throw new InvalidParameterException("로그인 양식에 맞지 않습니다.");
+                throw new MethodArgumentNotValidException("로그인 양식에 맞지 않습니다.");
             }
 
             return getAuthenticationManager().authenticate(
@@ -67,7 +67,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
             //사용자로부터 입력 받은 정보를 토큰으로 바꿔서 매니저로 넘기면
             // 아이디와 패스워드를 비교하겠다는 것
         } catch (IOException e){
-            throw new InvalidParameterException("로그인 폼에 맞지 않습니다.");
+            throw new MethodArgumentNotValidException("로그인 폼에 맞지 않습니다.");
         }
     }
 
