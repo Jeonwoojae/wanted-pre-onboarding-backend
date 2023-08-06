@@ -25,7 +25,7 @@ public class Member {
     String encryptedPassword;
 
     @Builder
-    private Member(String email, String encryptedPassword){
+    protected Member(String email, String encryptedPassword){
         this.email = email;
         this.encryptedPassword = encryptedPassword;
     }

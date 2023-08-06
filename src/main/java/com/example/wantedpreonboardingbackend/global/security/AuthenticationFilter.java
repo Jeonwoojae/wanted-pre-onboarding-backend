@@ -80,7 +80,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         MemberDto userDetails = memberService.getUserByEmail(userEmail);
         log.debug(userDetails.toString());
 
-        String accessToken = tokenProvider.createToken(userDetails.getId().toString());
+        String accessToken = tokenProvider.createToken(userDetails.getEmail().toString());
 
         response.addHeader(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken);
         response.setStatus(HttpServletResponse.SC_OK);
