@@ -91,4 +91,38 @@ class PostApiTest {
         }
     }
 
+    @Nested
+    @DisplayName("특정 게시글 조회 API")
+    class searchPostOne {
+        @Test
+        public void testSearchPostOneEndpoint() throws Exception {
+
+            // 게시글 작성
+            PostRequestDto postRequestDto = new PostRequestDto("Test Post Title");
+            mockMvc.perform(MockMvcRequestBuilders.post("/posts")
+                    .header("Authorization", "Bearer " + testToken)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(postRequestDto)));
+
+            // 게시글 목록 조회
+            String responseContent = mockMvc.perform(MockMvcRequestBuilders.get("/posts")
+                            .header("Authorization", "Bearer " + testToken)
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andReturn()
+                    .getResponse()
+                    .getContentAsString();
+
+            // 첫 번째 게시글 ID 추출
+            long firstPostId = objectMapper.readTree(responseContent)
+                    .get(0)
+                    .get("postId")
+                    .asLong();
+
+            // 게시글 조회
+            mockMvc.perform(MockMvcRequestBuilders.get("/posts/{postId}", firstPostId)
+                            .header("Authorization", "Bearer " + testToken)
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(MockMvcResultMatchers.status().isOk());
+        }
+    }
 }

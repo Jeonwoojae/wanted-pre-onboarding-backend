@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -44,5 +45,17 @@ public class PostService {
                 .collect(Collectors.toList());
 
         return postDtoList;
+    }
+
+    public PostDto findPostOne(Long postId, String token){
+        String currentUserEmail = tokenProvider.getEmailFromToken(token);
+        Member currentMember = memberRepository.findByEmail(currentUserEmail)
+                .orElseThrow(()->new EntityNotFoundException("해당하는 유저를 찾을 수 없습니다."));
+        Post currentPost = postRepository.findById(postId)
+                .orElseThrow(()->new EntityNotFoundException("해당하는 게시글을 찾을 수 없습니다."));
+        PostDto response = Optional.ofNullable(currentPost).map(PostDto::new)
+                .orElseThrow(()->new RuntimeException("Post dto 변환 실패"));
+
+        return response;
     }
 }

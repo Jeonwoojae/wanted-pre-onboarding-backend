@@ -33,4 +33,13 @@ public class PostApi {
 
         return ResponseEntity.ok().body(response);
     }
+
+    @GetMapping("/posts/{postId}")
+    public ResponseEntity<PostDto> searchPostsListPage(@RequestHeader("Authorization")String tokenHeader,
+                                                       @PathVariable("postId")Long postId) {
+        String accessToken = tokenHeader.substring(7);
+        PostDto currentPost = postService.findPostOne(postId,accessToken);
+
+        return ResponseEntity.ok().body(currentPost);
+    }
 }
