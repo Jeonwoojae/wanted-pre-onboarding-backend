@@ -81,4 +81,20 @@ public class PostService {
 
         return response;
     }
+
+    public void deletePost(Long postId, String token) {
+        String currentUserEmail = tokenProvider.getEmailFromToken(token);
+        Member currentMember = memberRepository.findByEmail(currentUserEmail)
+                .orElseThrow(()->new EntityNotFoundException("해당하는 유저를 찾을 수 없습니다."));
+        Post currentPost = postRepository.findById(postId)
+                .orElseThrow(()->new EntityNotFoundException("해당하는 게시글을 찾을 수 없습니다."));
+
+        // 게시글 권한 확인
+        if (!currentMember.hasPermissionForPost(currentPost)){
+            throw new AccessDeniedException("해당 게시글에 권한이 없습니다.");
+        }
+
+        // 게시글 삭제
+        postRepository.delete(currentPost);
+    }
 }

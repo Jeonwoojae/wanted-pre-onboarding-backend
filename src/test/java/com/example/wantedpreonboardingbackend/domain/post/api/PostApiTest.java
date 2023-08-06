@@ -18,11 +18,14 @@ import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import javax.transaction.Transactional;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@Transactional
 class PostApiTest {
     @Autowired
     private MockMvc mockMvc;
@@ -220,6 +223,72 @@ class PostApiTest {
             mockMvc.perform(MockMvcRequestBuilders.put("/posts/{postId}", firstPostId)
                             .header("Authorization", "Bearer " + testNoAuthUserToken)
                             .content(objectMapper.writeValueAsString(postEditDto))
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isForbidden());
+        }
+    }
+
+    @Nested
+    @DisplayName("특정 게시글 삭제 API")
+    class deletePostOne {
+        @Test
+        public void testDeletePostOneEndpoint() throws Exception {
+
+            // 게시글 작성
+            PostRequestDto postRequestDto = new PostRequestDto("Test Post Title");
+            mockMvc.perform(MockMvcRequestBuilders.post("/posts")
+                    .header("Authorization", "Bearer " + testAuthUserToken)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(postRequestDto)));
+
+            // 게시글 목록 조회
+            String responsePostsPage = mockMvc.perform(MockMvcRequestBuilders.get("/posts")
+                            .header("Authorization", "Bearer " + testAuthUserToken)
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andReturn()
+                    .getResponse()
+                    .getContentAsString();
+
+            // 첫 번째 게시글 ID 추출
+            long firstPostId = objectMapper.readTree(responsePostsPage)
+                    .get(0)
+                    .get("postId")
+                    .asLong();
+
+            // 게시글 삭제
+            mockMvc.perform(MockMvcRequestBuilders.delete("/posts/{postId}", firstPostId)
+                            .header("Authorization", "Bearer " + testAuthUserToken)
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andExpect(status().isOk());
+        }
+
+        @Test
+        public void testDeletePostDeniedEndpoint() throws Exception {
+
+            // 게시글 작성
+            PostRequestDto postRequestDto = new PostRequestDto("Test Post Title");
+            mockMvc.perform(MockMvcRequestBuilders.post("/posts")
+                    .header("Authorization", "Bearer " + testAuthUserToken)
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .content(objectMapper.writeValueAsString(postRequestDto)));
+
+            // 게시글 목록 조회
+            String responsePostsPage = mockMvc.perform(MockMvcRequestBuilders.get("/posts")
+                            .header("Authorization", "Bearer " + testAuthUserToken)
+                            .contentType(MediaType.APPLICATION_JSON))
+                    .andReturn()
+                    .getResponse()
+                    .getContentAsString();
+
+            // 첫 번째 게시글 ID 추출
+            long firstPostId = objectMapper.readTree(responsePostsPage)
+                    .get(0)
+                    .get("postId")
+                    .asLong();
+
+            // 게시글 삭제
+            mockMvc.perform(MockMvcRequestBuilders.delete("/posts/{postId}", firstPostId)
+                            .header("Authorization", "Bearer " + testNoAuthUserToken)
                             .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isForbidden());
         }

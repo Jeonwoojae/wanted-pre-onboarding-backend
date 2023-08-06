@@ -52,4 +52,13 @@ public class PostApi {
 
         return ResponseEntity.ok().body(editedPost);
     }
+
+    @DeleteMapping("/posts/{postId}")
+    public ResponseEntity<Void> deleteMyPost(@RequestHeader("Authorization")String tokenHeader,
+                                              @PathVariable("postId")Long postId) {
+        String accessToken = tokenHeader.substring(7);
+        postService.deletePost(postId,accessToken);
+
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
 }
