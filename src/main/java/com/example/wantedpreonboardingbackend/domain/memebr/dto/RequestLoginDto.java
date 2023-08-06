@@ -11,7 +11,7 @@ import javax.validation.constraints.Size;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RequestLogin {
+public class RequestLoginDto {
     @Email(message = "check your email")
     @NotBlank(message = "password must not be blank")
     private String email;
