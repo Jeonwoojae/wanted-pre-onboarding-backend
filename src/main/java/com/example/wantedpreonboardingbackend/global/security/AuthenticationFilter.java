@@ -1,7 +1,7 @@
 package com.example.wantedpreonboardingbackend.global.security;
 
 import com.example.wantedpreonboardingbackend.domain.memebr.dto.MemberDto;
-import com.example.wantedpreonboardingbackend.domain.memebr.dto.RequestLogin;
+import com.example.wantedpreonboardingbackend.domain.memebr.dto.RequestLoginDto;
 import com.example.wantedpreonboardingbackend.domain.memebr.service.MemberService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
@@ -47,7 +47,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     public Authentication attemptAuthentication(HttpServletRequest request,
                                                 HttpServletResponse response) throws AuthenticationException {
         try {
-            RequestLogin creds = new ObjectMapper().readValue(request.getInputStream(), RequestLogin.class);
+            RequestLoginDto creds = new ObjectMapper().readValue(request.getInputStream(), RequestLoginDto.class);
 
             BindingResult bindingResult = new BeanPropertyBindingResult(creds, "requestLogin");
             validator.validate(creds, bindingResult);

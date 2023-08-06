@@ -2,7 +2,7 @@ package com.example.wantedpreonboardingbackend.domain.post.service;
 
 import com.example.wantedpreonboardingbackend.domain.memebr.entity.Member;
 import com.example.wantedpreonboardingbackend.domain.memebr.repository.MemberRepository;
-import com.example.wantedpreonboardingbackend.domain.post.dto.PostDto;
+import com.example.wantedpreonboardingbackend.domain.post.dto.PostRequestDto;
 import com.example.wantedpreonboardingbackend.domain.post.entity.Post;
 import com.example.wantedpreonboardingbackend.domain.post.repository.PostRepository;
 import com.example.wantedpreonboardingbackend.global.security.TokenProvider;
@@ -11,6 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -34,8 +35,8 @@ class PostServiceTest {
     @InjectMocks
     private PostService postService;
 
-    public static class TestPostDto extends PostDto {
-        public TestPostDto(String title){
+    public static class TestRequestDto extends PostRequestDto {
+        public TestRequestDto(String title){
             super(title);
         }
     }
@@ -51,7 +52,7 @@ class PostServiceTest {
         // given
         String token = "THIS_IS_USER";
         String title = "게시글 명";
-        PostDto postDto = new PostDto(title);
+        PostRequestDto postRequestDto = new PostRequestDto(title);
         Member testMember = new TestMember("email123@naver.com", "12341234");
 
 
@@ -63,7 +64,7 @@ class PostServiceTest {
         });
 
         // when
-        Post savedPost = postService.writeNewPost(postDto,token);
+        Post savedPost = postService.writeNewPost(postRequestDto,token);
 
         // then
         assertEquals(title, savedPost.getTitle());
@@ -73,13 +74,13 @@ class PostServiceTest {
     @Test
     public void testWriteNewPostUserNotFound() {
         // Arrange
-        PostDto postDto = new TestPostDto("test title");
+        PostRequestDto postRequestDto = new TestRequestDto("test title");
 
         when(memberRepository.findByEmail(anyString())).thenReturn(Optional.empty());
 
         // Act and Assert
-        assertThrows(NoSuchElementException.class,
-                () -> postService.writeNewPost(postDto, "dummyToken"));
+        assertThrows(EntityNotFoundException.class,
+                () -> postService.writeNewPost(postRequestDto, "dummyToken"));
     }
 
 }
