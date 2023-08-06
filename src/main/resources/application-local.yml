@@ -1,0 +1,16 @@
+
+spring:
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: create-drop
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://mysql-container:3306/blog
+    username: jeonwoojae
+    password: jeonwoojae123
+
+token:
+  access_expiration_time: 864000000
+  secret: user_token
