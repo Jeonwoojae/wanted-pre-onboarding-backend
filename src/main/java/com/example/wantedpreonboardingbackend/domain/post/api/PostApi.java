@@ -42,4 +42,14 @@ public class PostApi {
 
         return ResponseEntity.ok().body(currentPost);
     }
+
+    @PutMapping("/posts/{postId}")
+    public ResponseEntity<PostDto> editMyPost(@RequestHeader("Authorization")String tokenHeader,
+                                              @PathVariable("postId")Long postId,
+                                              @Valid @RequestBody PostRequestDto requestPostRequestDto) {
+        String accessToken = tokenHeader.substring(7);
+        PostDto editedPost = postService.editPost(postId,accessToken,requestPostRequestDto);
+
+        return ResponseEntity.ok().body(editedPost);
+    }
 }
