@@ -2,6 +2,7 @@ package com.example.wantedpreonboardingbackend.domain.memebr.api;
 
 import com.example.wantedpreonboardingbackend.domain.memebr.dto.RequestJoinMemberDto;
 import com.example.wantedpreonboardingbackend.domain.memebr.service.MemberService;
+import com.example.wantedpreonboardingbackend.global.error.exception.MethodArgumentNotValidException;
 import jdk.jfr.Name;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -12,8 +13,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-
-import java.security.InvalidParameterException;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -110,7 +109,7 @@ class MemberApiTest {
         @Test
         @Name("Not Match Login Form")
         public void testLoginFormNotMatch() throws Exception{
-            Assertions.assertThrows(InvalidParameterException.class, ()->{
+            Assertions.assertThrows(MethodArgumentNotValidException.class, ()->{
                 mockMvc.perform(post("/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"email\": \"wronguser\", \"encryptedPassword\": \"wrongpassword\"}"));
@@ -120,7 +119,7 @@ class MemberApiTest {
         @Test
         @Name("Too short password")
         public void testLoginTooShortPassword() throws Exception{
-            Assertions.assertThrows(InvalidParameterException.class, ()->{
+            Assertions.assertThrows(MethodArgumentNotValidException.class, ()->{
                 mockMvc.perform(post("/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"email\": \"" + TEST_USERNAME + "\", \"password\": \"" + "123\"}"));
@@ -130,7 +129,7 @@ class MemberApiTest {
         @Test
         @Name("Is Not Email")
         public void testLoginNotEmailInput() throws Exception{
-            Assertions.assertThrows(InvalidParameterException.class, ()->{
+            Assertions.assertThrows(MethodArgumentNotValidException.class, ()->{
                 mockMvc.perform(post("/login")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content("{\"email\": \"" + "dnwo\", \"password\": \"" + TEST_PASSWORD + "\"}"));

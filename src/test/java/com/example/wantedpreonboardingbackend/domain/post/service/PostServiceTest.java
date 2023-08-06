@@ -5,14 +5,13 @@ import com.example.wantedpreonboardingbackend.domain.memebr.repository.MemberRep
 import com.example.wantedpreonboardingbackend.domain.post.dto.PostRequestDto;
 import com.example.wantedpreonboardingbackend.domain.post.entity.Post;
 import com.example.wantedpreonboardingbackend.domain.post.repository.PostRepository;
+import com.example.wantedpreonboardingbackend.global.error.exception.EntityNotFoundException;
 import com.example.wantedpreonboardingbackend.global.security.TokenProvider;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import javax.persistence.EntityNotFoundException;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
