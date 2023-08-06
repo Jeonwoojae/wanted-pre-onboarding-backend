@@ -1,5 +1,6 @@
 package com.example.wantedpreonboardingbackend.domain.post.dto;
 
+import com.example.wantedpreonboardingbackend.domain.post.entity.Post;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,5 +15,9 @@ public class PostDto {
 
     public PostDto(String title) {
         this.title = title;
+    }
+
+    public PostDto(Post post){
+        this.title = post.getTitle();
     }
 }
