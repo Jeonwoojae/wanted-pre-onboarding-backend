@@ -10,19 +10,20 @@ import javax.persistence.*;
 
 @Getter
 @Entity
+@Table(name = "Posts")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "post_id", updatable = false)
-    Long id;
+    private Long id;
 
     @Column(nullable = false)
-    String title;
+    private String title;
 
     @ManyToOne
     @JoinColumn(name = "member_id", nullable = false)
-    Member owner;
+    private Member owner;
 
     @Builder
     public Post(String title, Member owner) {
