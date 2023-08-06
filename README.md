@@ -38,6 +38,19 @@ https://youtu.be/bIYpxubMGrE
 ```
 - ### Response
   - 201 CREATED
+  - 400 가입 양식에 맞지 않은 경우
+  ```json
+    "message": " Invalid Input Value",
+    "status": 400,
+    "errors": [
+        {
+            "field": "email",
+            "value": "",
+            "reason": "password must not be blank"
+        }
+    ],
+    "code": "C001"
+  ```
 - #### 실행 화면
 ![Join.gif](asset%2FJoin.gif)
 - #### 구현 방법 및 이유
@@ -60,7 +73,11 @@ https://youtu.be/bIYpxubMGrE
 ```
 - ### Response
   - 200 OK
-  - header "Authorization" : "{AccessToken}"
+  ```json
+  header "Authorization" : "{AccessToken}"
+  ```
+  - 403 해당 사용자 없음
+  - 500 양식에 맞지않음
 - #### 실행 화면
 ![Login.gif](asset%2FLogin.gif)
 - #### 구현 방법 및 이유
@@ -86,7 +103,8 @@ https://youtu.be/bIYpxubMGrE
 ```
 - ### Response
   - 200 OK
-  - 400 내용이 없을 경우
+  - 400 내용이 없을 경우, 양식에 맞지 않은 경우
+  - 500 토큰이 없는 경우
 - #### 실행 화면
 ![Write Post.gif](asset%2FWrite%20Post.gif)
 - #### 구현 방법 및 이유
@@ -102,6 +120,7 @@ https://youtu.be/bIYpxubMGrE
 
 - ### Response
   - 200 OK
+  - 500 토큰이 없는 경우
 ```json
 [
   {
@@ -140,8 +159,10 @@ https://youtu.be/bIYpxubMGrE
   "title": "취업하는 방법"
 }
 ```
+  - 400 게시글이 없는 경우
+  - 500 토큰이 없는 경우
 - #### 실행 화면
-  ![Get Post One.gif](asset%2FGet%20Post%20One.gif)
+  ![Get One Post.gif](asset%2FGet%20One%20Post.gif)
 - #### 구현 방법 및 이유
   - 통상적인 RestAPI 조건에 따라 주소에서 ID를 받아 해당 ID의 게시글을 조회하도록 했습니다.
 
@@ -159,8 +180,11 @@ https://youtu.be/bIYpxubMGrE
 ```
 - ### Response
   - 200 OK
+  - 400 게시글이 없는 경우
+  - 403 권한이 없는 경우
+  - 500 토큰이 없는 경우
 - #### 실행 화면
-![Edit Post One.gif](asset%2FEdit%20Post%20One.gif)
+![Edit One Post.gif](asset%2FEdit%20One%20Post.gif)
 - #### 구현 방법 및 이유
   - 통상적인 RestAPI 조건에 따라 주소에서 ID를 받고 수정할 내용은 body로 받으며 행위는 method로 인식했습니다.
   - 수정할 수 있는 권한을 가지고 있는지 Jwt로 확인합니다.
@@ -177,6 +201,9 @@ https://youtu.be/bIYpxubMGrE
 
 - ### Response
   - 200 OK
+  - 400 게시글이 없는 경우
+  - 403 권한이 없는 경우
+  - 500 토큰이 없는 경우
 - #### 실행 화면
 ![Delete One Post.gif](asset%2FDelete%20One%20Post.gif)
 - #### 구현 방법 및 이유
@@ -187,7 +214,7 @@ https://youtu.be/bIYpxubMGrE
 
 
 ## 가산점 요소
-- 통합 테스트 또는 단위 테스트 코드를 추가한 경우
+- **통합 테스트** 또는 단위 테스트 코드를 추가한 경우
 - docker compose를 이용하여 애플리케이션 환경을 구성한 경우 (README.md 파일에 docker-compose 실행 방법 반드시 기입)
 - 클라우드 환경(AWS, GCP)에 배포 환경을 설계하고 애플리케이션을 배포한 경우 (README.md 파일에 배포된 API 주소와 설계한 AWS 환경 그림으로 첨부)
 
