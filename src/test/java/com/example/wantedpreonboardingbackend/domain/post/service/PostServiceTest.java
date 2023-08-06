@@ -11,6 +11,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -78,7 +79,7 @@ class PostServiceTest {
         when(memberRepository.findByEmail(anyString())).thenReturn(Optional.empty());
 
         // Act and Assert
-        assertThrows(NoSuchElementException.class,
+        assertThrows(EntityNotFoundException.class,
                 () -> postService.writeNewPost(postRequestDto, "dummyToken"));
     }
 
