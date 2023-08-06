@@ -10,6 +10,7 @@ import com.example.wantedpreonboardingbackend.global.security.TokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.EntityNotFoundException;
@@ -57,5 +58,43 @@ public class PostService {
                 .orElseThrow(()->new RuntimeException("Post dto 변환 실패"));
 
         return response;
+    }
+
+    public PostDto editPost(Long postId, String token, PostRequestDto requestPostRequestDto) {
+        String currentUserEmail = tokenProvider.getEmailFromToken(token);
+        Member currentMember = memberRepository.findByEmail(currentUserEmail)
+                .orElseThrow(()->new EntityNotFoundException("해당하는 유저를 찾을 수 없습니다."));
+        Post currentPost = postRepository.findById(postId)
+                .orElseThrow(()->new EntityNotFoundException("해당하는 게시글을 찾을 수 없습니다."));
+
+        // 게시글 권한 확인
+        if (!currentMember.hasPermissionForPost(currentPost)){
+            throw new AccessDeniedException("해당 게시글에 권한이 없습니다.");
+        }
+
+        // 게시글 수정
+        currentPost.editPost(requestPostRequestDto);
+        currentPost = postRepository.save(currentPost);
+
+        PostDto response = Optional.ofNullable(currentPost).map(PostDto::new)
+                .orElseThrow(()->new RuntimeException("Post dto 변환 실패"));
+
+        return response;
+    }
+
+    public void deletePost(Long postId, String token) {
+        String currentUserEmail = tokenProvider.getEmailFromToken(token);
+        Member currentMember = memberRepository.findByEmail(currentUserEmail)
+                .orElseThrow(()->new EntityNotFoundException("해당하는 유저를 찾을 수 없습니다."));
+        Post currentPost = postRepository.findById(postId)
+                .orElseThrow(()->new EntityNotFoundException("해당하는 게시글을 찾을 수 없습니다."));
+
+        // 게시글 권한 확인
+        if (!currentMember.hasPermissionForPost(currentPost)){
+            throw new AccessDeniedException("해당 게시글에 권한이 없습니다.");
+        }
+
+        // 게시글 삭제
+        postRepository.delete(currentPost);
     }
 }

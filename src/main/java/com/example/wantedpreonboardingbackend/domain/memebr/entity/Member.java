@@ -37,4 +37,7 @@ public class Member {
         this.encryptedPassword = encryptedPassword;
     }
 
+    public boolean hasPermissionForPost(Post post) {
+        return posts.contains(post);
+    }
 }

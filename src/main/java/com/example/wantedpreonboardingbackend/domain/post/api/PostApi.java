@@ -42,4 +42,23 @@ public class PostApi {
 
         return ResponseEntity.ok().body(currentPost);
     }
+
+    @PutMapping("/posts/{postId}")
+    public ResponseEntity<PostDto> editMyPost(@RequestHeader("Authorization")String tokenHeader,
+                                              @PathVariable("postId")Long postId,
+                                              @Valid @RequestBody PostRequestDto requestPostRequestDto) {
+        String accessToken = tokenHeader.substring(7);
+        PostDto editedPost = postService.editPost(postId,accessToken,requestPostRequestDto);
+
+        return ResponseEntity.ok().body(editedPost);
+    }
+
+    @DeleteMapping("/posts/{postId}")
+    public ResponseEntity<Void> deleteMyPost(@RequestHeader("Authorization")String tokenHeader,
+                                              @PathVariable("postId")Long postId) {
+        String accessToken = tokenHeader.substring(7);
+        postService.deletePost(postId,accessToken);
+
+        return ResponseEntity.status(HttpStatus.OK).build();
+    }
 }

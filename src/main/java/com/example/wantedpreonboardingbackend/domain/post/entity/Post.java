@@ -1,6 +1,7 @@
 package com.example.wantedpreonboardingbackend.domain.post.entity;
 
 import com.example.wantedpreonboardingbackend.domain.memebr.entity.Member;
+import com.example.wantedpreonboardingbackend.domain.post.dto.PostRequestDto;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -29,5 +30,9 @@ public class Post {
     public Post(String title, Member owner) {
         this.title = title;
         this.owner = owner;
+    }
+
+    public void editPost(PostRequestDto requestPostRequestDto) {
+        this.title = requestPostRequestDto.getTitle();
     }
 }
