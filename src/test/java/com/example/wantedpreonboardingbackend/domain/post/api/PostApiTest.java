@@ -4,6 +4,7 @@ import com.example.wantedpreonboardingbackend.domain.memebr.dto.RequestJoinMembe
 import com.example.wantedpreonboardingbackend.domain.memebr.dto.RequestLoginDto;
 import com.example.wantedpreonboardingbackend.domain.memebr.service.MemberService;
 import com.example.wantedpreonboardingbackend.domain.post.dto.PostDto;
+import com.example.wantedpreonboardingbackend.domain.post.dto.PostRequestDto;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -27,8 +28,6 @@ class PostApiTest {
     private MockMvc mockMvc;
     @Autowired
     private ObjectMapper objectMapper;
-    @Autowired
-    private MemberService memberService;
 
     private static final String TEST_USERNAME = "dnwo0719@naver.com";
     private static final String TEST_PASSWORD = "12341234";
@@ -61,12 +60,12 @@ class PostApiTest {
     class writePost {
         @Test
         public void testWriteNewPostEndpoint() throws Exception {
-            PostDto postDto = new PostDto("Test Post Title");
+            PostRequestDto postRequestDto = new PostRequestDto("Test Post Title");
 
             mockMvc.perform(MockMvcRequestBuilders.post("/posts")
                             .header("Authorization", "Bearer " + testToken)
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(postDto)))
+                            .content(objectMapper.writeValueAsString(postRequestDto)))
                     .andExpect(MockMvcResultMatchers.status().isCreated());
         }
     }
@@ -78,11 +77,11 @@ class PostApiTest {
         public void testSearchPostsListPageEndpoint() throws Exception {
 
             // 게시글 작성
-            PostDto postDto = new PostDto("Test Post Title");
+            PostRequestDto postRequestDto = new PostRequestDto("Test Post Title");
             mockMvc.perform(MockMvcRequestBuilders.post("/posts")
                             .header("Authorization", "Bearer " + testToken)
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsString(postDto)));
+                            .content(objectMapper.writeValueAsString(postRequestDto)));
 
             // 게시글 조회
             mockMvc.perform(MockMvcRequestBuilders.get("/posts")

@@ -1,6 +1,7 @@
 package com.example.wantedpreonboardingbackend.domain.post.api;
 
 import com.example.wantedpreonboardingbackend.domain.post.dto.PostDto;
+import com.example.wantedpreonboardingbackend.domain.post.dto.PostRequestDto;
 import com.example.wantedpreonboardingbackend.domain.post.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -17,10 +18,10 @@ public class PostApi {
     private final PostService postService;
 
     @PostMapping("/posts")
-    public ResponseEntity<Void> writeNewPost(@Valid @RequestBody PostDto requestPostDto,
+    public ResponseEntity<Void> writeNewPost(@Valid @RequestBody PostRequestDto requestPostRequestDto,
                                              @RequestHeader("Authorization")String tokenHeader){
         String token = tokenHeader.substring(7);
-        postService.writeNewPost(requestPostDto,token);
+        postService.writeNewPost(requestPostRequestDto,token);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
