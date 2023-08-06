@@ -17,7 +17,7 @@ $ ./gradlew bootjar
 $ docker-compose up -d
 ```
 ### 모든 API 실행 영상
-https://youtu.be/bIYpxubMGrE
+https://youtu.be/J34AO4u-7Hc
 
 ## API 명세서
 ### 1. 사용자 회원가입
